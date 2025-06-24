@@ -1,4 +1,4 @@
-package br.edu.atitus.api_sample.controllers;
+package br.edu.atitus.api_citytour.controllers;
 
 import java.util.List;
 import java.util.UUID;
@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.edu.atitus.api_sample.dtos.PointDTO;
-import br.edu.atitus.api_sample.entities.PointEntity;
-import br.edu.atitus.api_sample.services.PointService;
+import br.edu.atitus.api_citytour.dtos.PointDTO;
+import br.edu.atitus.api_citytour.entities.PointEntity;
+import br.edu.atitus.api_citytour.services.PointService;
 
 @RestController
 @RequestMapping("/ws/point")

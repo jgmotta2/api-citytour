@@ -1,4 +1,4 @@
-package br.edu.atitus.api_sample.configs;
+package br.edu.atitus.api_citytour.configs;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,7 +11,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import br.edu.atitus.api_sample.components.AuthTokenFilter;
+import br.edu.atitus.api_citytour.components.AuthTokenFilter;
 
 @Configuration
 public class ConfigSecurity {
