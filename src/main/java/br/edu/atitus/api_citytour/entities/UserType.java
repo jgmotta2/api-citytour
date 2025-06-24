@@ -1,4 +1,4 @@
-package br.edu.atitus.api_sample.entities;
+package br.edu.atitus.api_citytour.entities;
 
 public enum UserType {
 

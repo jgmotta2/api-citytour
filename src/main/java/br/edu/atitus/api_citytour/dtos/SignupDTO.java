@@ -1,5 +1,10 @@
-package br.edu.atitus.api_sample.dtos;
+package br.edu.atitus.api_citytour.dtos;
 
-public record SignupDTO(String name, String email, String password) {
+import java.time.LocalDate;
 
-}
+public record SignupDTO(
+        String name,
+        String email,
+        String password,
+        LocalDate birthDate)
+{ }

@@ -1,5 +1,6 @@
 package br.edu.atitus.api_citytour.controllers;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,12 +13,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.edu.atitus.api_sample.components.JWTUtils;
-import br.edu.atitus.api_sample.dtos.SigninDTO;
-import br.edu.atitus.api_sample.dtos.SignupDTO;
-import br.edu.atitus.api_sample.entities.UserEntity;
-import br.edu.atitus.api_sample.entities.UserType;
-import br.edu.atitus.api_sample.services.UserService;
+import br.edu.atitus.api_citytour.components.JWTUtils;
+import br.edu.atitus.api_citytour.dtos.SigninDTO;
+import br.edu.atitus.api_citytour.dtos.SignupDTO;
+import br.edu.atitus.api_citytour.entities.UserEntity;
+import br.edu.atitus.api_citytour.entities.UserType;
+import br.edu.atitus.api_citytour.services.UserService;
 
 @RestController
 @RequestMapping("/auth")

@@ -1,4 +1,4 @@
-package br.edu.atitus.api_sample.services;
+package br.edu.atitus.api_citytour.services;
 
 import java.util.List;
 import java.util.UUID;
@@ -6,9 +6,9 @@ import java.util.UUID;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import br.edu.atitus.api_sample.entities.PointEntity;
-import br.edu.atitus.api_sample.entities.UserEntity;
-import br.edu.atitus.api_sample.repositories.PointRepository;
+import br.edu.atitus.api_citytour.entities.PointEntity;
+import br.edu.atitus.api_citytour.entities.UserEntity;
+import br.edu.atitus.api_citytour.repositories.PointRepository;
 
 @Service
 public class PointService {

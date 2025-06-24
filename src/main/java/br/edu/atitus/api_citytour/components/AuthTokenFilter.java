@@ -6,7 +6,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import br.edu.atitus.api_sample.services.UserService;
+import br.edu.atitus.api_citytour.services.UserService;
 import io.jsonwebtoken.io.IOException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -30,7 +30,7 @@ public class AuthTokenFilter extends OncePerRequestFilter{
 			String email = br.edu.atitus.api_sample.components.JWTUtils.validateToken(jwt);
 			if (email != null) {
 				var user = userService.loadUserByUsername(email);
-				UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(user, null, null);
+				UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
 				
 				
 				auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
