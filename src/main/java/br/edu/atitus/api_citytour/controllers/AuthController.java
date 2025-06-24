@@ -1,5 +1,6 @@
 package br.edu.atitus.api_citytour.controllers;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -30,7 +30,7 @@ public class AuthTokenFilter extends OncePerRequestFilter{
 			String email = JWTUtils.validateToken(jwt);
 			if (email != null) {
 				var user = userService.loadUserByUsername(email);
-				UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(user, null, null);
+				UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
 				
 				
 				auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
