@@ -1,4 +1,4 @@
-package br.edu.atitus.api_sample.components;
+package br.edu.atitus.api_citytour.components;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,9 +25,9 @@ public class AuthTokenFilter extends OncePerRequestFilter{
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException, java.io.IOException {
-		String jwt = JWTUtils.getJwtFromRequest(request);
+		String jwt = br.edu.atitus.api_sample.components.JWTUtils.getJwtFromRequest(request);
 		if (jwt != null) {
-			String email = JWTUtils.validateToken(jwt);
+			String email = br.edu.atitus.api_sample.components.JWTUtils.validateToken(jwt);
 			if (email != null) {
 				var user = userService.loadUserByUsername(email);
 				UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(user, null, null);

@@ -1,4 +1,4 @@
-package br.edu.atitus.api_sample.components;
+package br.edu.atitus.api_citytour.components;
 import java.util.Date;
 
 import javax.crypto.SecretKey;
