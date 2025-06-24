@@ -45,9 +45,9 @@ public class ReviewService {
         return reviewRepository.save(review);
     }
 
-    public List<ReviewEntity> getReviewsByPlace(UUID placeId) throws Exception {
+    public List<ReviewEntity> getReviewsByPlace(UUID placeId) throws ResourceNotFoundExcep {
         PointEntity place = pointRepository.findById(placeId)
-                .orElseThrow(() -> new Exception("Place with ID " + placeId + " not found."));
+                .orElseThrow(() -> new ResourceNotFoundExcep("Place with ID " + placeId + " not found."));
         return reviewRepository.findByPlace(place);
     }
 

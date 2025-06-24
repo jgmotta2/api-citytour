@@ -3,6 +3,7 @@ package br.edu.atitus.api_citytour.controllers;
 import java.util.List;
 import java.util.UUID;
 
+import br.edu.atitus.api_citytour.components.ResourceNotFoundExcep;
 import br.edu.atitus.api_citytour.dtos.PointRatingDTO;
 import br.edu.atitus.api_citytour.dtos.ReviewDTO;
 import br.edu.atitus.api_citytour.entities.ReviewEntity;
@@ -33,35 +34,23 @@ public class PointController {
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<String> delete(@PathVariable UUID id) throws Exception{
+	public ResponseEntity<String> delete(@PathVariable UUID id) throws ResourceNotFoundExcep {
 		service.deleteById(id);
-
 		return ResponseEntity.ok("Place deleted");
-
 	}
 
 	@PostMapping
 	public ResponseEntity<PointEntity> save(@Valid @RequestBody PointDTO dto) throws Exception {
 		PointEntity point = new PointEntity();
 		BeanUtils.copyProperties(dto, point);
-
 		service.save(point);
-
 		return ResponseEntity.status(201).body(point);
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<PointEntity> update(@PathVariable UUID id, @Valid @RequestBody PointDTO dto) throws Exception {
-		PointEntity existingPoint = service.findById(id)
-				.orElseThrow(() -> new Exception("Place not found."));
-
-		existingPoint.setName(dto.name());
-		existingPoint.setDescription(dto.description());
-		existingPoint.setLatitude(dto.latitude());
-		existingPoint.setLongitude(dto.longitude());
-
-		service.save(existingPoint);
-		return ResponseEntity.ok(existingPoint);
+	public ResponseEntity<PointEntity> update(@PathVariable UUID id, @Valid @RequestBody PointDTO dto) throws ResourceNotFoundExcep {
+		PointEntity updatedPoint = service.update(id, dto);
+		return ResponseEntity.ok(updatedPoint);
 	}
 
 
@@ -72,9 +61,9 @@ public class PointController {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<PointEntity> findById(@PathVariable UUID id) throws Exception {
+	public ResponseEntity<PointEntity> findById(@PathVariable UUID id) throws ResourceNotFoundExcep {
 		PointEntity point = service.findById(id)
-				.orElseThrow(() -> new Exception("Place not found."));
+				.orElseThrow(() -> new ResourceNotFoundExcep("Place not found."));
 		return ResponseEntity.ok(point);
 	}
 
@@ -98,16 +87,15 @@ public class PointController {
 	@PostMapping("/{placeId}/reviews")
 	public ResponseEntity<ReviewEntity> addReviewToPlace(
 			@PathVariable UUID placeId,
-			@Valid @RequestBody ReviewDTO reviewDTO) throws Exception {
+			@Valid @RequestBody ReviewDTO reviewDTO) throws ResourceNotFoundExcep {
 		ReviewEntity review = new ReviewEntity();
 		BeanUtils.copyProperties(reviewDTO, review);
-
 		ReviewEntity savedReview = reviewService.saveReview(placeId, review);
 		return ResponseEntity.status(201).body(savedReview);
 	}
 
 	@GetMapping("/{placeId}/reviews")
-	public ResponseEntity<List<ReviewEntity>> getReviewsOfPlace(@PathVariable UUID placeId) throws Exception {
+	public ResponseEntity<List<ReviewEntity>> getReviewsOfPlace(@PathVariable UUID placeId) throws ResourceNotFoundExcep {
 		List<ReviewEntity> reviews = reviewService.getReviewsByPlace(placeId);
 		return ResponseEntity.ok(reviews);
 	}

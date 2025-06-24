@@ -16,30 +16,30 @@ import jakarta.servlet.http.HttpServletResponse;
 @Component
 public class AuthTokenFilter extends OncePerRequestFilter{
 	private final UserService userService;
+	private final JWTUtils jwtUtils;
 
-	public AuthTokenFilter(UserService userService) {
+	public AuthTokenFilter(UserService userService, JWTUtils jwtUtils) {
 		super();
 		this.userService = userService;
+		this.jwtUtils = jwtUtils;
 	}
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException, java.io.IOException {
-		String jwt = br.edu.atitus.api_citytour.components.JWTUtils.getJwtFromRequest(request);
+		String jwt = jwtUtils.getJwtFromRequest(request);
 		if (jwt != null) {
-			String email = br.edu.atitus.api_citytour.components.JWTUtils.validateToken(jwt);
+			String email = jwtUtils.validateToken(jwt);
 			if (email != null) {
 				var user = userService.loadUserByUsername(email);
 				UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
-				
-				
+
 				auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-				
-				
+
 				SecurityContextHolder.getContext().setAuthentication(auth);
 			}
 		}
 		filterChain.doFilter(request, response);
 	}
-	
+
 }

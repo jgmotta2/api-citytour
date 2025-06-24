@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import br.edu.atitus.api_citytour.components.ResourceNotFoundExcep;
+import br.edu.atitus.api_citytour.dtos.PointDTO;
 import br.edu.atitus.api_citytour.dtos.PointRatingDTO;
 import br.edu.atitus.api_citytour.entities.UserType;
 import org.springframework.data.domain.Page;
@@ -25,6 +26,25 @@ public class PointService {
 		super();
 		this.repository = repository;
 	}
+
+	public PointEntity update(UUID id, PointDTO dto) throws ResourceNotFoundExcep {
+
+		PointEntity existingPoint = repository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundExcep("Place with ID " + id + " not found."));
+
+		UserEntity userAuth = (UserEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (!existingPoint.getUser().getId().equals(userAuth.getId())) {
+			throw new ResourceNotFoundExcep("You do not have permission to update this record.");
+		}
+
+		existingPoint.setName(dto.name());
+		existingPoint.setDescription(dto.description());
+		existingPoint.setLatitude(dto.latitude());
+		existingPoint.setLongitude(dto.longitude());
+
+		return repository.save(existingPoint);
+	}
+
 
 	public PointEntity save(PointEntity point) throws ResourceNotFoundExcep {
 		if (point == null)
@@ -95,6 +115,8 @@ public class PointService {
 	public List<PointEntity> getMostVisited() {
 		return repository.findTop10ByOrderByVisitCountDesc();
 	}
+
+
 
 	public Page<PointRatingDTO> getTopRated(Pageable pageable) {
 		return repository.findTopRatedPoints(pageable);

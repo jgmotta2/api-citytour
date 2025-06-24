@@ -1,5 +1,6 @@
 package br.edu.atitus.api_citytour.services;
 
+import br.edu.atitus.api_citytour.components.InvalidPasswordException;
 import br.edu.atitus.api_citytour.components.ResourceNotFoundExcep;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -49,12 +50,11 @@ public class UserService implements UserDetailsService {
 		}
 
 		user.setPassword(passwordEncoder.encode(newPassword));
-		
+
 		repository.save(user);
 	}
 
-
-	public UserEntity save(UserEntity user) throws ResourceNotFoundExcep {
+	public UserEntity save(UserEntity user) throws ResourceNotFoundExcep, InvalidPasswordException {
 		if (user == null)
 			throw new ResourceNotFoundExcep("Object cannot be null.");
 
@@ -75,11 +75,11 @@ public class UserService implements UserDetailsService {
 		if (user.getPassword() == null
 				|| user.getPassword().isEmpty()
 				|| user.getPassword().length() < 8)
-			throw new ResourceNotFoundExcep("Invalid password.");
+			throw new InvalidPasswordException("Invalid password.");
 
 		Matcher passwordMatcher = PASSWORD_STRENGTH_PATTERN.matcher(user.getPassword());
 		if (!passwordMatcher.matches()) {
-			throw new ResourceNotFoundExcep("Invalid password: must contain at least one uppercase letter, one lowercase letter, one number, and one special character.");
+			throw new InvalidPasswordException("Invalid password: must contain at least one uppercase letter, one lowercase letter, one number, and one special character.");
 		}
 
 		if (user.getBirthDate() == null) {
