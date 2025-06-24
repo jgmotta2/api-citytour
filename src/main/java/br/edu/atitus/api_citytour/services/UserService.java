@@ -1,5 +1,6 @@
 package br.edu.atitus.api_citytour.services;
 
+import br.edu.atitus.api_citytour.components.ResourceNotFoundExcep;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,8 +16,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
-public class UserService implements UserDetailsService{
-	
+public class UserService implements UserDetailsService {
+
 	private final UserRepository repository;
 	private final PasswordEncoder passwordEncoder;
 	private static final String EMAIL_REGEX = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$";
@@ -31,9 +32,9 @@ public class UserService implements UserDetailsService{
 		this.passwordEncoder = passwordEncoder;
 	}
 
-	public UserEntity updateProfile(UUID userId, UserEntity updatedUser) throws Exception {
+	public UserEntity updateProfile(UUID userId, UserEntity updatedUser) throws ResourceNotFoundExcep {
 		UserEntity existingUser = repository.findById(userId)
-				.orElseThrow(() -> new Exception("Usuário não encontrado."));
+				.orElseThrow(() -> new ResourceNotFoundExcep("User not found."));
 
 		existingUser.setName(updatedUser.getName().trim());
 		existingUser.setBirthDate(updatedUser.getBirthDate());
@@ -43,58 +44,58 @@ public class UserService implements UserDetailsService{
 	}
 
 
-	public UserEntity save(UserEntity user) throws Exception {
+	public UserEntity save(UserEntity user) throws ResourceNotFoundExcep {
 		if (user == null)
-			throw new Exception("Objeto não pode ser nulo");
-		
+			throw new ResourceNotFoundExcep("Object cannot be null.");
+
 		if (user.getName() == null || user.getName().isEmpty())
-			throw new Exception("Nome inválido");
+			throw new ResourceNotFoundExcep("Invalid name.");
 		user.setName(user.getName().trim());
-		
-		
+
+
 		if (user.getEmail() == null || user.getEmail().isEmpty())
-			throw new Exception("E-mail inválido");
+			throw new ResourceNotFoundExcep("Invalid email.");
 
 		Matcher matcher = EMAIL_PATTERN.matcher(user.getEmail());
 		if (!matcher.matches()) {
-			throw new Exception("Formato de e-mail inválido.");
+			throw new ResourceNotFoundExcep("Invalid email format.");
 		}
 		user.setEmail(user.getEmail().trim().toLowerCase());
 
-		if (user.getPassword() == null 
+		if (user.getPassword() == null
 				|| user.getPassword().isEmpty()
 				|| user.getPassword().length() < 8)
-			throw new Exception("Password inválido");
+			throw new ResourceNotFoundExcep("Invalid password.");
 
 		Matcher passwordMatcher = PASSWORD_STRENGTH_PATTERN.matcher(user.getPassword());
 		if (!passwordMatcher.matches()) {
-			throw new Exception("Senha inválida: deve conter pelo menos uma letra maiúscula, uma minúscula, um número e um caractere especial.");
+			throw new ResourceNotFoundExcep("Invalid password: must contain at least one uppercase letter, one lowercase letter, one number, and one special character.");
 		}
 
 		if (user.getBirthDate() == null) {
-			throw new Exception("Data de nascimento é obrigatória.");
+			throw new ResourceNotFoundExcep("Birth date is required.");
 		}
 		if (user.getBirthDate().isAfter(LocalDate.now())) {
-			throw new Exception("Data de nascimento não pode ser no futuro.");
+			throw new ResourceNotFoundExcep("Birth date cannot be in the future.");
 		}
 
 		if (user.getType() == null)
-			throw new Exception("Tipo de usuário inválido");
+			throw new ResourceNotFoundExcep("Invalid user type.");
 
 		if (repository.existsByEmail(user.getEmail()))
-			throw new Exception("Já existe usuário cadastrado com este e-mail");
+			throw new ResourceNotFoundExcep("User with this email already exists.");
 
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		
+
 		repository.save(user);
-		
+
 		return user;
 	}
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		var user = repository.findByEmail(username)
-				.orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
+				.orElseThrow(() -> new UsernameNotFoundException("User not found"));
 		return user;
 	}
 

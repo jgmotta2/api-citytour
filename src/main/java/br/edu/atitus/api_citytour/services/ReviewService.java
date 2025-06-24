@@ -1,5 +1,6 @@
 package br.edu.atitus.api_citytour.services;
 
+import br.edu.atitus.api_citytour.components.ResourceNotFoundExcep;
 import br.edu.atitus.api_citytour.entities.PointEntity;
 import br.edu.atitus.api_citytour.entities.ReviewEntity;
 import br.edu.atitus.api_citytour.entities.UserEntity;
@@ -24,18 +25,17 @@ public class ReviewService {
         this.pointRepository = pointRepository;
     }
 
-    public ReviewEntity saveReview(UUID placeId, ReviewEntity review) throws Exception {
+    public ReviewEntity saveReview(UUID placeId, ReviewEntity review) throws ResourceNotFoundExcep {
         if (review == null) {
-            throw new Exception("Review object cannot be null.");
+            throw new ResourceNotFoundExcep("Review object cannot be null.");
         }
         if (review.getRating() < 1 || review.getRating() > 5) {
-            throw new Exception("The rating must be between 1 and 5.");
+            throw new ResourceNotFoundExcep("The rating must be between 1 and 5.");
         }
 
         PointEntity place = pointRepository.findById(placeId)
-                .orElseThrow(() -> new Exception("Place with ID " + placeId + " not found."));
+                .orElseThrow(() -> new ResourceNotFoundExcep("Place with ID " + placeId + " not found."));
 
-        // Get the logged-in user from the security context
         UserEntity userAuth = (UserEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         review.setPlace(place);
@@ -51,7 +51,6 @@ public class ReviewService {
         return reviewRepository.findByPlace(place);
     }
 
-    // Method to calculate the average rating for a place (can be useful)
     public double getAverageRatingForPlace(UUID placeId) {
         List<ReviewEntity> reviews = reviewRepository.findByPlace(pointRepository.getReferenceById(placeId));
         if (reviews.isEmpty()) {
@@ -60,7 +59,6 @@ public class ReviewService {
         return reviews.stream().mapToInt(ReviewEntity::getRating).average().orElse(0.0);
     }
 
-    // For "Top Rated"
     public List<ReviewEntity> getTopRatedReviews(int minRating) {
         return reviewRepository.findByRatingGreaterThanEqualOrderByRatingDesc(minRating);
     }

@@ -64,10 +64,4 @@ public class AuthController {
 		
 		return ResponseEntity.status(HttpStatus.CREATED).body(user);
 	}
-	
-	@ExceptionHandler(value = Exception.class)
-	public ResponseEntity<String> handlerException(Exception ex) {
-		String message = ex.getMessage().replaceAll("\r\n", "");
-		return ResponseEntity.badRequest().body(message);
-	}
 }

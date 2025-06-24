@@ -3,11 +3,15 @@ package br.edu.atitus.api_citytour.controllers;
 import java.util.List;
 import java.util.UUID;
 
+import br.edu.atitus.api_citytour.dtos.PointRatingDTO;
 import br.edu.atitus.api_citytour.dtos.ReviewDTO;
 import br.edu.atitus.api_citytour.entities.ReviewEntity;
 import br.edu.atitus.api_citytour.services.ReviewService;
 import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -60,9 +64,9 @@ public class PointController {
 
 
 	@GetMapping
-	public ResponseEntity<List<PointEntity>> findAll(){
-		var list = service.findAll();
-		return ResponseEntity.ok(list);
+	public ResponseEntity<Page<PointEntity>> findAll(Pageable pageable){
+		var page = service.findAll(pageable);
+		return ResponseEntity.ok(page);
 	}
 
 	@GetMapping("/{id}")
@@ -82,18 +86,14 @@ public class PointController {
 	}
 
 	@GetMapping("/top-rated")
-	public ResponseEntity<List<ReviewEntity>> getTopRatedPlaces() {
-		// This returns the reviews, but you might want to return the Places with their average ratings
-		// For simplicity, I'm returning the reviews. The ideal would be a Place DTO with the average review score
-		return ResponseEntity.ok(reviewService.getTopRatedReviews(4)); // Example: ratings >= 4 stars
+	public ResponseEntity<Page<PointRatingDTO>> getTopRatedPlaces() {
+		Page<PointRatingDTO> topRated = service.getTopRated(PageRequest.of(0, 10));
+		return ResponseEntity.ok(topRated);
 	}
 
-	// New endpoint for "Most Visited Places" (Most Visited Places Screen)
 	@GetMapping("/most-visited")
 	public ResponseEntity<List<PointEntity>> getMostVisitedPlaces() {
-		// This functionality requires a visit counting mechanism or other criteria.
-		// Returning all as a placeholder, but ideally it would be a list ordered by visits.
-		return ResponseEntity.ok(service.findAll()); // Placeholder
+		return ResponseEntity.ok(service.getMostVisited());
 	}
 
 	@PostMapping("/{placeId}/reviews")
@@ -102,6 +102,7 @@ public class PointController {
 			@Valid @RequestBody ReviewDTO reviewDTO) throws Exception {
 		ReviewEntity review = new ReviewEntity();
 		BeanUtils.copyProperties(reviewDTO, review);
+		// Finalize a chamada do método e retorne o resultado
 		ReviewEntity savedReview = reviewService.saveReview(placeId, review);
 		return ResponseEntity.status(201).body(savedReview);
 	}
@@ -110,11 +111,5 @@ public class PointController {
 	public ResponseEntity<List<ReviewEntity>> getReviewsOfPlace(@PathVariable UUID placeId) throws Exception {
 		List<ReviewEntity> reviews = reviewService.getReviewsByPlace(placeId);
 		return ResponseEntity.ok(reviews);
-	}
-
-	@ExceptionHandler(value = Exception.class)
-	public ResponseEntity<String> handlerException(Exception ex) {
-		String message = ex.getMessage().replaceAll("\r\n", "");
-		return ResponseEntity.badRequest().body(message);
 	}
 }

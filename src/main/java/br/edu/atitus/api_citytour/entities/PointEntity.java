@@ -33,6 +33,17 @@ public class PointEntity {
 	@JoinColumn(name = "id_user")
 	private UserEntity user;
 
+	@Column(nullable = false, columnDefinition = "int default 0")
+	private int visitCount = 0;
+
+	public int getVisitCount() {
+		return visitCount;
+	}
+
+	public void setVisitCount(int visitCount) {
+		this.visitCount = visitCount;
+	}
+
 	public UUID getId() {
 		return id;
 	}
