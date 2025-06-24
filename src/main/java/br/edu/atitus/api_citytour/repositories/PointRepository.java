@@ -13,6 +13,6 @@ import br.edu.atitus.api_citytour.entities.UserEntity;
 public interface PointRepository extends JpaRepository<PointEntity, UUID>{
 	
 	List<PointEntity> findByUser(UserEntity user);
-	List<PointEntity> findByDescription(String description);
+	List<PointEntity> findByDescriptionContainingIgnoreCase(String description);
 
 }
