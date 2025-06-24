@@ -5,9 +5,14 @@ import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-public record PointDTO(@NotBlank(message = "Description is mandatory")
-                        @Size(max = 250, message = "Description must be less than 250 characters")
-                        String description,
+public record PointDTO(
+                       @NotBlank(message = "Name is mandatory")
+                       @Size(max = 150, message = "Name must be less than 150 characters")
+                       String name,
+
+                       @NotBlank(message = "Description is mandatory")
+                       @Size(max = 250, message = "Description must be less than 250 characters")
+                       String description,
 
                        @DecimalMin(value = "-90.0", message = "Latitude must be between -90 and 90")
                         @DecimalMax(value = "90.0", message = "Latitude must be between -90 and 90")

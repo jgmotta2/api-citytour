@@ -19,6 +19,9 @@ public class PointEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private UUID id;
+
+	@Column(length = 150, nullable = false)
+	private String name;
 	
 	@Column(columnDefinition = "Decimal(17,14)", nullable = false)
 	private double latitude;
@@ -83,7 +86,13 @@ public class PointEntity {
 	public void setUser(UserEntity user) {
 		this.user = user;
 	}
-	
-	
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 
 }

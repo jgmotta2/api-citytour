@@ -54,6 +54,8 @@ public class PointController {
 	public ResponseEntity<PointEntity> update(@PathVariable UUID id, @Valid @RequestBody PointDTO dto) throws Exception {
 		PointEntity existingPoint = service.findById(id)
 				.orElseThrow(() -> new Exception("Place not found."));
+
+		existingPoint.setName(dto.name());
 		existingPoint.setDescription(dto.description());
 		existingPoint.setLatitude(dto.latitude());
 		existingPoint.setLongitude(dto.longitude());
@@ -77,12 +79,9 @@ public class PointController {
 	}
 
 	@GetMapping("/search")
-	public ResponseEntity<List<PointEntity>> searchPoints(@RequestParam String query) {
-		// You would need to add a `search` method in `PointService` and `PointRepository`
-		// E.g., `List<PointEntity> searchPoints(String query);` in PointRepository
-		// That searches by name or description.
-		// For now, it returns all that match the query in the description (example)
-		return ResponseEntity.ok(service.findByDescriptionContainingIgnoreCase(query));
+	public ResponseEntity<Page<PointEntity>> searchPoints(@RequestParam String query, Pageable pageable) {
+		Page<PointEntity> resultPage = service.search(query, pageable);
+		return ResponseEntity.ok(resultPage);
 	}
 
 	@GetMapping("/top-rated")
@@ -102,7 +101,7 @@ public class PointController {
 			@Valid @RequestBody ReviewDTO reviewDTO) throws Exception {
 		ReviewEntity review = new ReviewEntity();
 		BeanUtils.copyProperties(reviewDTO, review);
-		// Finalize a chamada do método e retorne o resultado
+
 		ReviewEntity savedReview = reviewService.saveReview(placeId, review);
 		return ResponseEntity.status(201).body(savedReview);
 	}

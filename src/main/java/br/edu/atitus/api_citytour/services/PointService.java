@@ -86,8 +86,8 @@ public class PointService {
 		return pointOpt;
 	}
 
-	public List<PointEntity> findByDescriptionContainingIgnoreCase(String query) {
-		return repository.findByDescriptionContainingIgnoreCase(query);
+	public Page<PointEntity> search(String term, Pageable pageable) {
+		return repository.searchByTerm(term, pageable);
 	}
 
 	public List<PointEntity> getMostVisited() {
