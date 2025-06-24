@@ -1,5 +1,6 @@
 package br.edu.atitus.api_citytour.entities;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.UUID;
@@ -32,6 +33,9 @@ public class UserEntity implements UserDetails{
 	
 	@Column(length = 100, nullable = false, unique = true)
 	private String email;
+
+	@Column(nullable = true)
+	private LocalDate birthDate;
 	
 	@Column(length = 100, nullable = false)
 	@JsonIgnore
@@ -79,6 +83,14 @@ public class UserEntity implements UserDetails{
 
 	public void setType(UserType type) {
 		this.type = type;
+	}
+
+	public LocalDate getBirthDate() {
+		return birthDate;
+	}
+
+	public void setBirthDate(LocalDate birthDate) {
+		this.birthDate = birthDate;
 	}
 
 	@Override

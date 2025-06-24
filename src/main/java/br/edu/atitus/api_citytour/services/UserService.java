@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import br.edu.atitus.api_citytour.entities.UserEntity;
 import br.edu.atitus.api_citytour.repositories.UserRepository;
 
+import java.time.LocalDate;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,6 +30,18 @@ public class UserService implements UserDetailsService{
 		this.repository = repository;
 		this.passwordEncoder = passwordEncoder;
 	}
+
+	public UserEntity updateProfile(UUID userId, UserEntity updatedUser) throws Exception {
+		UserEntity existingUser = repository.findById(userId)
+				.orElseThrow(() -> new Exception("Usuário não encontrado."));
+
+		existingUser.setName(updatedUser.getName().trim());
+		existingUser.setBirthDate(updatedUser.getBirthDate());
+
+
+		return repository.save(existingUser);
+	}
+
 
 	public UserEntity save(UserEntity user) throws Exception {
 		if (user == null)
@@ -56,13 +70,20 @@ public class UserService implements UserDetailsService{
 		if (!passwordMatcher.matches()) {
 			throw new Exception("Senha inválida: deve conter pelo menos uma letra maiúscula, uma minúscula, um número e um caractere especial.");
 		}
-		
+
+		if (user.getBirthDate() == null) {
+			throw new Exception("Data de nascimento é obrigatória.");
+		}
+		if (user.getBirthDate().isAfter(LocalDate.now())) {
+			throw new Exception("Data de nascimento não pode ser no futuro.");
+		}
+
 		if (user.getType() == null)
 			throw new Exception("Tipo de usuário inválido");
-		
+
 		if (repository.existsByEmail(user.getEmail()))
 			throw new Exception("Já existe usuário cadastrado com este e-mail");
-		
+
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		
 		repository.save(user);
