@@ -43,6 +43,16 @@ public class UserService implements UserDetailsService {
 		return repository.save(existingUser);
 	}
 
+	public void updatePassword(UserEntity user, String oldPassword, String newPassword) throws Exception {
+		if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+			throw new Exception("Incorrect old password.");
+		}
+
+		user.setPassword(passwordEncoder.encode(newPassword));
+		
+		repository.save(user);
+	}
+
 
 	public UserEntity save(UserEntity user) throws ResourceNotFoundExcep {
 		if (user == null)

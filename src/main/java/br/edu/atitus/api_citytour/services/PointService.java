@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import br.edu.atitus.api_citytour.components.ResourceNotFoundExcep;
 import br.edu.atitus.api_citytour.dtos.PointRatingDTO;
+import br.edu.atitus.api_citytour.entities.UserType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -65,8 +66,9 @@ public class PointService {
 
 		UserEntity userAuth = (UserEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-		if (!point.getUser().getId().equals(userAuth.getId()))
+		if (userAuth.getType() != UserType.Admin && !point.getUser().getId().equals(userAuth.getId())) {
 			throw new ResourceNotFoundExcep("You do not have permission to delete this record.");
+		}
 
 		repository.deleteById(id);
 	}
