@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -49,21 +48,5 @@ public class ReviewService {
         PointEntity place = pointRepository.findById(placeId)
                 .orElseThrow(() -> new ResourceNotFoundExcep("Place with ID " + placeId + " not found."));
         return reviewRepository.findByPlace(place);
-    }
-
-    public double getAverageRatingForPlace(UUID placeId) {
-        List<ReviewEntity> reviews = reviewRepository.findByPlace(pointRepository.getReferenceById(placeId));
-        if (reviews.isEmpty()) {
-            return 0.0;
-        }
-        return reviews.stream().mapToInt(ReviewEntity::getRating).average().orElse(0.0);
-    }
-
-    public List<ReviewEntity> getTopRatedReviews(int minRating) {
-        return reviewRepository.findByRatingGreaterThanEqualOrderByRatingDesc(minRating);
-    }
-
-    public Optional<ReviewEntity> findById(UUID id) {
-        return reviewRepository.findById(id);
     }
 }

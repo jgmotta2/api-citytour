@@ -16,10 +16,8 @@ import br.edu.atitus.api_citytour.entities.UserEntity;
 
 @Repository
 public interface PointRepository extends JpaRepository<PointEntity, UUID>{
-	
-	List<PointEntity> findByUser(UserEntity user);
 
-	List<PointEntity> findTop10ByOrderByVisitCountDesc();
+	List<PointEntity> findTop10ByVisitCountGreaterThanOrderByVisitCountDesc(int visitCount);
 
 	@Query("SELECT p FROM PointEntity p WHERE LOWER(p.name) LIKE LOWER(CONCAT('%', :term, '%')) OR LOWER(p.description) LIKE LOWER(CONCAT('%', :term, '%'))")
 	Page<PointEntity> searchByTerm(@Param("term") String term, Pageable pageable);

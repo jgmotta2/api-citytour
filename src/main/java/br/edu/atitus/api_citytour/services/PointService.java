@@ -28,7 +28,6 @@ public class PointService {
 	}
 
 	public PointEntity update(UUID id, PointDTO dto) throws ResourceNotFoundExcep {
-
 		PointEntity existingPoint = repository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundExcep("Place with ID " + id + " not found."));
 
@@ -98,7 +97,6 @@ public class PointService {
 	}
 
 	public Optional<PointEntity> findById(UUID id) {
-
 		Optional<PointEntity> pointOpt = repository.findById(id);
 		if (pointOpt.isPresent()) {
 			PointEntity point = pointOpt.get();
@@ -109,14 +107,20 @@ public class PointService {
 	}
 
 	public Page<PointEntity> search(String term, Pageable pageable) {
-		return repository.searchByTerm(term, pageable);
+		Page<PointEntity> resultPage = repository.searchByTerm(term, pageable);
+
+		if (resultPage.getTotalElements() == 1) {
+			PointEntity uniquePoint = resultPage.getContent().get(0);
+			uniquePoint.setVisitCount(uniquePoint.getVisitCount() + 1);
+			repository.save(uniquePoint);
+		}
+
+		return resultPage;
 	}
 
 	public List<PointEntity> getMostVisited() {
-		return repository.findTop10ByOrderByVisitCountDesc();
+		return repository.findTop10ByVisitCountGreaterThanOrderByVisitCountDesc(5);
 	}
-
-
 
 	public Page<PointRatingDTO> getTopRated(Pageable pageable) {
 		return repository.findTopRatedPoints(pageable);
