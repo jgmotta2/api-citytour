@@ -6,9 +6,9 @@ services:
     container_name: mysql_db_citytour
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: db_apicitytour
-      MYSQL_USER: Developer
-      MYSQL_PASSWORD: developer
+      MYSQL_DATABASE: bancoteste
+      MYSQL_USER: developer
+      MYSQL_PASSWORD: 741098
     ports:
       - "3307:3306"
     volumes:

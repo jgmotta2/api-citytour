@@ -34,9 +34,6 @@ public class UserEntity implements UserDetails{
 	@Column(length = 100, nullable = false, unique = true)
 	private String email;
 
-	@Column(nullable = true)
-	private LocalDate birthDate;
-	
 	@Column(length = 100, nullable = false)
 	@JsonIgnore
 	private String password;
@@ -83,14 +80,6 @@ public class UserEntity implements UserDetails{
 
 	public void setType(UserType type) {
 		this.type = type;
-	}
-
-	public LocalDate getBirthDate() {
-		return birthDate;
-	}
-
-	public void setBirthDate(LocalDate birthDate) {
-		this.birthDate = birthDate;
 	}
 
 	@Override

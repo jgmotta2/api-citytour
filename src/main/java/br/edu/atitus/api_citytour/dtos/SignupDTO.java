@@ -5,7 +5,5 @@ import java.time.LocalDate;
 public record SignupDTO(
         String name,
         String email,
-        String password,
-        String confirmPassword,
-        LocalDate birthDate)
+        String password)
 { }

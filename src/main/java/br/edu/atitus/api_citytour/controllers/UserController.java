@@ -32,7 +32,6 @@ public class UserController {
         UserEntity userToUpdate = new UserEntity();
         userToUpdate.setId(userAuth.getId());
         userToUpdate.setName(dto.name());
-        userToUpdate.setBirthDate(dto.birthDate());
 
         UserEntity updatedUser = userService.updateProfile(userAuth.getId(), userToUpdate);
         return ResponseEntity.ok(updatedUser);

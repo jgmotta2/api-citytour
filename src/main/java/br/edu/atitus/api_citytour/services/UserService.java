@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import br.edu.atitus.api_citytour.entities.UserEntity;
 import br.edu.atitus.api_citytour.repositories.UserRepository;
 
-import java.time.LocalDate;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -38,7 +37,6 @@ public class UserService implements UserDetailsService {
 				.orElseThrow(() -> new ResourceNotFoundExcep("User not found."));
 
 		existingUser.setName(updatedUser.getName().trim());
-		existingUser.setBirthDate(updatedUser.getBirthDate());
 
 
 		return repository.save(existingUser);
@@ -80,13 +78,6 @@ public class UserService implements UserDetailsService {
 		Matcher passwordMatcher = PASSWORD_STRENGTH_PATTERN.matcher(user.getPassword());
 		if (!passwordMatcher.matches()) {
 			throw new InvalidPasswordException("Invalid password: must contain at least one uppercase letter, one lowercase letter, one number, and one special character.");
-		}
-
-		if (user.getBirthDate() == null) {
-			throw new ResourceNotFoundExcep("Birth date is required.");
-		}
-		if (user.getBirthDate().isAfter(LocalDate.now())) {
-			throw new ResourceNotFoundExcep("Birth date cannot be in the future.");
 		}
 
 		if (user.getType() == null)
