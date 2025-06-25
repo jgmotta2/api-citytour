@@ -20,7 +20,7 @@ import br.edu.atitus.api_citytour.services.UserService;
 
 @RestController
 @RequestMapping("/auth")
-public class AuthController {
+public class 	AuthController {
 
 	private final UserService service;
 	private final AuthenticationConfiguration authConfig;
