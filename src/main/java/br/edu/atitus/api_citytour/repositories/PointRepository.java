@@ -16,8 +16,6 @@ import br.edu.atitus.api_citytour.entities.UserEntity;
 
 @Repository
 public interface PointRepository extends JpaRepository<PointEntity, UUID>{
-	
-	List<PointEntity> findByUser(UserEntity user);
 
 	List<PointEntity> findTop10ByVisitCountGreaterThanOrderByVisitCountDesc(int visitCount);
 

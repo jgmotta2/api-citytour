@@ -11,6 +11,6 @@ import java.util.UUID;
 @Repository
 public interface ReviewRepository extends JpaRepository<ReviewEntity, UUID> {
     List<ReviewEntity> findByPlace(PointEntity place);
-    long countByPlace(PointEntity place);
+
     List<ReviewEntity> findByRatingGreaterThanEqualOrderByRatingDesc(int rating);
 }
