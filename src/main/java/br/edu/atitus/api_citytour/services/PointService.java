@@ -80,14 +80,8 @@ public class PointService {
 	}
 
 	public void deleteById(UUID id) throws ResourceNotFoundExcep {
-		var point = repository.findById(id)
+		repository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundExcep("Point with this ID does not exist."));
-
-		UserEntity userAuth = (UserEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-		if (userAuth.getType() != UserType.Admin && !point.getUser().getId().equals(userAuth.getId())) {
-			throw new ResourceNotFoundExcep("You do not have permission to delete this record.");
-		}
 
 		repository.deleteById(id);
 	}
