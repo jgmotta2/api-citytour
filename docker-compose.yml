@@ -2,18 +2,16 @@ version: '3.8'
 
 services:
   db:
-    image: mysql:8.0
-    container_name: mysql_db_citytour
+    image: postgres:13
+    container_name: postgres_db_citytour
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: bancoteste
-      MYSQL_USER: developer
-      MYSQL_PASSWORD: 741098
+      POSTGRES_DB: db_apicitytour
+      POSTGRES_USER: Developer
+      POSTGRES_PASSWORD: developer
     ports:
-      - "3307:3306"
+      - "5432:5432"
     volumes:
-      - db_data:/var/lib/mysql
-
+      - db_data:/var/lib/postgresql/data
 
   app:
     build: .
@@ -23,8 +21,11 @@ services:
     ports:
       - "8080:8080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/db_apicitytour?useSSL=false&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/db_apicitytour
+      SPRING_DATASOURCE_USERNAME: developer
+      SPRING_DATASOURCE_PASSWORD: 741098
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_HIBERNATE_DIALECT: org.hibernate.dialect.PostgreSQLDialect
 
 volumes:
   db_data:
